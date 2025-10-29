@@ -1,0 +1,13 @@
+# .coveragerc
+
+[run]
+# Habilita la medición de cobertura de ramas (Branches)
+branch = True
+# Indica a coverage.py que solo mire la carpeta de tu código fuente
+source = src
+
+[report]
+# Esta línea inicia la lista de exclusiones
+exclude_lines =
+    # ⚠️ La línea de exclusión debe ir inmediatamente debajo
+    if __name__ == "__main__":
