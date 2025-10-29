@@ -1,0 +1,41 @@
+
+name: CI - Pruebas y Cobertura de ISBN
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test_and_coverage:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: ⚙️ Checkout Código
+      uses: actions/checkout@v4
+
+    - name: 🐍 Configurar Python
+      uses: actions/setup-python@v4
+      with:
+        # Usa una versión de Python compatible con tu entorno
+        python-version: '3.11' 
+
+    - name: Instalar Dependencias
+      run: |
+        python -m pip install --upgrade pip
+        # Instalar pytest, pytest-cov y unittest.mock para dobles de prueba
+        pip install pytest pytest-cov 
+
+    - name: Ejecutar Pruebas y Generar Reporte de Cobertura
+      # El comando usa --cov=src para medir la cobertura del código en la carpeta 'src'
+      # y --cov-report=html para generar la carpeta 'htmlcov' con el reporte visual.
+      run: |
+        pytest --cov=src --cov-report=term-missing --cov-report=html
+
+    - name: Publicar Reporte HTML de Cobertura como Artefacto
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report-html
+        path: htmlcov/ # La carpeta que contiene el reporte visual de cobertura
+        retention-days: 5 # Tiempo que GitHub mantendrá el archivo (evidencia)
